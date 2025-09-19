@@ -14,3 +14,34 @@ nextBtn.addEventListener('click' , function(){
     }
 })
 
+ window.addEventListener("keydown", function (event) {
+    const keys = ["ArrowDown", "ArrowUp"];
+    if (!keys.includes(event.key)) return;
+
+    event.preventDefault();
+
+    const direction = event.key === "ArrowDown" ? 1 : -1;
+    const scrollAmount = 200;  
+    const duration = 1000;  
+
+    const start = window.scrollY;
+    const end = start + direction * scrollAmount;
+    const startTime = performance.now();
+
+    function easeOutQuad(t) {
+      return t * (2 - t); // smoother ease out
+    }
+
+    function animateScroll(currentTime) {
+      const timeElapsed = currentTime - startTime;
+      const progress = Math.min(timeElapsed / duration, 1);
+      const easedProgress = easeOutQuad(progress);
+      window.scrollTo(0, start + (end - start) * easedProgress);
+
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      }
+    }
+
+    requestAnimationFrame(animateScroll);
+  });
